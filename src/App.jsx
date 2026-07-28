@@ -48,7 +48,7 @@ const CHAPTERS = [
       label: "Pack this. You won't be home again until tonight.",
       items: [
         "The gym clothes you're wearing right now",
-        "A bathing suit, for the sauna and cold plunge",
+        "A bathing suit",
         "A cute daytime outfit",
         "A sexy dinner dress for the evening",
         "An even sexier one for after dinner \ud83d\ude09",
