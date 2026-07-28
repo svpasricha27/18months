@@ -27,151 +27,146 @@ const P = '/photos/'
    ------------------------------------------------------------------------- */
 const CHAPTERS = [
   {
-    n: 1, t: at('08:00:00'), clock: '8:00 AM', band: 'am',
-    eyebrow: 'Chapter I · Morning',
+    n: 1, t: at('08:15:00'), clock: '8:15 AM', band: 'am',
+    eyebrow: 'Chapter I \u00b7 Morning',
     title: 'The first page',
     body: [
       "Good morning, my favourite person. Happy eighteen months.",
-      "No rushing today — the whole thing is already planned, so all you have to do is follow the notes as they open. First order of business: a real breakfast, something with actual protein in it. You'll thank me by 10.",
-      "Wear something cute and comfortable; you'll be moving this morning. Glasses or contacts, doesn't matter even a little — I'm obsessed with you in both.",
+      "No rushing today. The whole thing is already planned; all you have to do is follow the notes as they open. First order of business: a real breakfast, something with actual protein in it. You'll thank me by 10.",
+      "Here's the one sweet rule for today: photograph it. Every stop, every little moment, take a picture so tonight I can live the whole day back through your eyes. So do your lashes, put your face on, and start the morning already picture-ready. Glasses or contacts, either one, you are breathtaking in both.",
+      "Then pull on your workout clothes, because you're moving your body this morning. Dress for a proper sweat: leggings, a good top, the works.",
+      "This first stretch of the day is yours to enjoy solo. I'm not beside you, but I'm right here in these notes, guiding you the whole way (and watching, happily).",
     ],
     photos: [{ src: 'c01.jpg', cap: 'us. exhibit A.' }],
   },
   {
-    n: 2, t: at('09:00:00'), clock: '9:00 AM', band: 'am',
-    eyebrow: 'Chapter II · Morning',
-    title: 'Chapter one is sweat',
-    place: 'Club Sūdō',
+    n: 2, t: at('09:15:00'), clock: '9:15 AM', band: 'am',
+    eyebrow: 'Chapter II \u00b7 Morning',
+    title: 'Off you go',
+    place: 'Club S\u016bd\u014d',
     address: '16 Famous Ave, Unit 145, Woodbridge (Vaughan)',
     mapQ: 'Club Sudo, 16 Famous Ave Unit 145, Vaughan ON',
     body: [
-      "Order your ride to Club Sūdō and aim to be there by 9:00 so you can settle in before class. Yes — this one's a gift: I set you up with a 10-day trial. Happy anniversary, athlete.",
-      "Check in under your name, Anjali Gandhi. Your reformer Pilates class is at 9:30 — ask for Hope McCleary, she knows you're coming. Go be strong and a little smug about it.",
+      "Around 9:15, order your ride to Club S\u016bd\u014d and head out for the day. Give yourself time to arrive, settle in, and get in the zone before class. Yes, this one's a gift: I set you up with a 10-day trial. Happy anniversary, athlete.",
+      "Check in under your name, Anjali Gandhi. Grab your spot, find your locker, and take a cute mirror pic for me while you're at it.",
     ],
     keycard: {
-      label: 'Your trial — if they need details at the desk',
+      label: 'Your trial, in case they need details at the desk',
       name: 'Anjali Gandhi',
       email: 'spasricha@qmed.ca',
       password: 'sachinpasricha',
     },
-    photos: [{ src: 'c02.jpg', cap: 'you mid-laugh — my favourite genre.' }],
+    photos: [{ src: 'c02.jpg', cap: 'you mid-laugh, my favourite genre.' }],
   },
   {
     n: 3, t: at('10:30:00'), clock: '10:30 AM', band: 'am',
-    eyebrow: 'Chapter III · Morning',
-    title: 'Hot, then cold',
-    place: 'Contrast Therapy — Open Flow, Club Sūdō',
+    eyebrow: 'Chapter III \u00b7 Morning',
+    title: 'Chapter one is sweat',
+    place: 'Steady Strength \u00b7 Intermediate, Club S\u016bd\u014d',
     body: [
-      "Straight from the reformer into contrast therapy — open flow, move at your own pace. Sauna until you're melty, cold plunge until you gasp, repeat until you feel unstoppable.",
-      "Breathe. Reset. Think about me if you want to (you don't have to — but you will).",
-    ],
-    photos: [{ src: 'c03.jpg', cap: 'cold day, warm you.' }],
-  },
-  {
-    n: 4, t: at('11:15:00'), clock: '11:15 AM', band: 'am',
-    eyebrow: 'Chapter IV · Morning',
-    title: 'Freshen up',
-    place: 'Shower & glow — Club Sūdō',
-    body: [
-      "Grab a shower and get yourself looking cute — for you first, for your partner second.",
-      "Glasses or contacts, whatever you feel like today; he loves you exactly the same in both. (It's me. I'm your partner.) And don't overthink the look — you'll have plenty of time to get properly dressed up before dinner.",
+      "It's class time. Steady Strength, Intermediate, 10:30 on the dot. Ask for Allexa Schabel, she knows you're coming.",
+      "Go work that booty and be a little smug about it. Snap a flushed, proud, glowing photo when you're done, I want to see exactly how strong you looked.",
     ],
     photos: [{ src: 'c04.jpg', cap: 'proof we clean up okay.' }],
   },
   {
-    n: 5, t: at('12:00:00'), clock: '12:00 PM', band: 'am',
-    eyebrow: 'Chapter V · Midday',
-    title: 'Table for one (I\u2019m sorry)',
-    place: 'Lunch — Clementina',
-    address: '16 Famous Ave, Unit 143, Woodbridge — same plaza',
+    n: 4, t: at('11:30:00'), clock: '11:30 AM', band: 'am',
+    eyebrow: 'Chapter IV \u00b7 Midday',
+    title: 'Hot, then cold',
+    place: 'Contrast Therapy \u00b7 Open Flow, Club S\u016bd\u014d',
+    body: [
+      "Straight into contrast therapy, open flow, move at your own pace. Sauna until you're melty, cold plunge until you gasp, repeat.",
+      "Keep it to about 20 to 30 minutes today though. There's plenty more day ahead of you, and your trial means you can come back and linger any time over the next 10 days.",
+      "When you're done, rinse off and freshen up. A quick one is all you need; you'll have plenty of time to get properly dressed up before dinner. Then think about me if you want to (you don't have to, but you will).",
+    ],
+    photos: [{ src: 'c03.jpg', cap: 'cold day, warm you.' }],
+  },
+  {
+    n: 5, t: at('12:15:00'), clock: '12:15 PM', band: 'am',
+    eyebrow: 'Chapter V \u00b7 Midday',
+    title: 'Grab and go',
+    place: 'Lunch \u00b7 Clementina',
+    address: '16 Famous Ave, Unit 143, Woodbridge (same plaza)',
     mapQ: 'Clementina, 16 Famous Ave Unit 143, Vaughan ON',
     body: [
-      "Here's the part I hate: I can't be at this one. Walk over to Clementina — it's right there in the plaza — and treat yourself to a proper lunch.",
-      "Order whatever you want, sit like the main character, and know I'm thinking about you the entire time. (If Clementina isn't calling your name, anywhere in the plaza works.)",
+      "This one is all yours, and it's quick. Pop into Clementina, right there in the plaza, and grab something tasty to take with you. The kind of thing you can happily eat on the subway.",
+      "You've got a train to catch soon, so keep it grab-and-go rather than a sit-down. (Anywhere in the plaza works if Clementina's slammed.) I love that I get to feed you even from here.",
     ],
     photos: [{ src: 'c05.jpg', cap: 'this one lives in my head rent-free.' }],
   },
   {
-    n: 6, t: at('12:30:00'), clock: '12:30 PM', band: 'am',
-    eyebrow: 'Chapter VI · Midday',
-    title: 'Your chariot',
-    place: 'Uber → Vaughan Metropolitan Centre Station',
+    n: 6, t: at('12:45:00'), clock: '12:45 PM', band: 'am',
+    eyebrow: 'Chapter VI \u00b7 Midday',
+    title: 'Your chariot, then the train',
+    place: 'Uber \u2192 Vaughan Metropolitan Centre, then Line 1 south',
     mapQ: 'Vaughan Metropolitan Centre Station',
     body: [
-      "Time to point yourself downtown. Order an Uber to Vaughan Metropolitan Centre subway station — the big shiny one at the end of the line.",
-      "Don't worry about where you're headed yet. Just get in the car.",
+      "Order your Uber now to Vaughan Metropolitan Centre subway station, the big shiny one at the end of the line.",
+      "From there, tap in and hop on Line 1 heading south. Grab a seat, put a good song on, eat your lunch, and enjoy twenty-odd minutes of doing nothing. Get off at Osgoode. The next note tells you where to walk from there. Almost there.",
     ],
-    photos: [{ src: 'c06.jpg', cap: 'look at us.' }],
+    photos: [
+      { src: 'c06.jpg', cap: 'look at us.' },
+      { src: 'c07.jpg', cap: 'my favourite plus-one.' },
+    ],
   },
   {
-    n: 7, t: at('12:45:00'), clock: '12:45 PM', band: 'am',
-    eyebrow: 'Chapter VII · Midday',
-    title: 'Down the line',
-    place: 'Line 1 southbound, from VMC',
-    body: [
-      "Tap in and hop on the subway heading south. Grab a seat, put a good song on, and enjoy twenty-odd minutes of doing absolutely nothing.",
-      "You're going most of the way downtown — get off at Osgoode. The next note tells you where to walk. Almost there.",
-    ],
-    photos: [{ src: 'c07.jpg', cap: 'my favourite plus-one.' }],
-  },
-  {
-    n: 8, t: at('13:30:00'), clock: '1:30 PM', band: 'am',
-    eyebrow: 'Chapter VIII · Afternoon',
+    n: 7, t: at('13:45:00'), clock: '1:45 PM', band: 'am',
+    eyebrow: 'Chapter VII \u00b7 Afternoon',
     title: 'Read something we\u2019ll share',
     place: 'Flying Books at Neverland',
     address: '371 Queen St W (near Osgoode station)',
     mapQ: 'Flying Books at Neverland, 371 Queen St W, Toronto',
     body: [
-      "Walk to Flying Books at Neverland — 371 Queen St W. It's a bookshop and a wine bar pretending to be one cozy room, and it's yours for the next hour.",
-      "Your mission: pick a book you actually want us to read together. Whatever you choose, I promise to read it within two years — a real promise, in writing, timestamped right here.",
-      "While you browse, order yourself a glass of wine or a ridiculous fancy coffee. Take your time. Fall in love with something on the shelf.",
+      "Walk to Flying Books at Neverland, 371 Queen St W. It's a bookshop and a wine bar pretending to be one cozy room, and it's yours for the next hour.",
+      "Your mission: pick a book you actually want us to read together. Whatever you choose, I promise to read it within two years. A real promise, in writing, timestamped right here.",
+      "While you browse, order yourself a glass of wine or a ridiculous fancy coffee. Take your time and enjoy your own company (and one more photo for me). This is your last solo stop before you come find me.",
     ],
     photos: [
-      { src: 'c08.jpg', cap: 'wine and you — a theme develops.' },
+      { src: 'c08.jpg', cap: 'wine and you, a theme develops.' },
       { src: 'c09.jpg', cap: 'you make the camera nervous.' },
     ],
   },
   {
-    n: 9, t: at('15:15:00'), clock: '3:15 PM', band: 'pm',
-    eyebrow: 'Chapter IX · Afternoon',
+    n: 8, t: at('15:15:00'), clock: '3:15 PM', band: 'pm',
+    eyebrow: 'Chapter VIII \u00b7 Afternoon',
     title: 'Come to me',
-    place: "→ Sachin\u2019s condo (you know the way)",
+    place: "\u2192 Sachin\u2019s condo (you know the way)",
     body: [
-      "Close the book — buy it, obviously — and head to my place. You know the address by heart.",
-      "This is the turn where the day starts pointing at the evening. And the evening, just so we're clear, is pointing at you.",
+      "Close the book (buy it, obviously) and head to my place. You know the address by heart.",
+      "This is where the solo part ends and I finally get you all to myself. Come to me. From here on, I'm right by your side for the rest of the night.",
     ],
     photos: [{ src: 'c10.jpg', cap: 'dressed up, still goofy.' }],
   },
   {
-    n: 10, t: at('15:45:00'), clock: '3:45 PM', band: 'pm',
-    eyebrow: 'Chapter X · Evening approaches',
-    title: 'Get ready (read: sexy)',
-    place: "Get ready at Sachin\u2019s — until 5:00",
+    n: 9, t: at('15:45:00'), clock: '3:45 PM', band: 'pm',
+    eyebrow: 'Chapter IX \u00b7 Evening approaches',
+    title: 'Get ready sexy',
+    place: "Get ready at Sachin\u2019s, until 5:00",
     body: [
-      "You've got the place to yourself for a bit while I wrap something up. Use it. Take your time getting ready and — I'll use our word — dress sexy. The cute, knock-the-wind-out-of-me kind.",
-      "This is the version of tonight I've been picturing since I planned the whole thing. Pour yourself something if you like. Make me regret scheduling a meeting.",
+      "Take your time getting ready, and I'll be right there with you while you do. Dress in a way that makes me want to end the night early \ud83d\ude09",
+      "This is the version of tonight I've been picturing since I started planning all of this. Pour yourself something if you like, and enjoy having me all to yourself again.",
     ],
     photos: [{ src: 'c11.jpg', cap: 'eighteen months of this face.' }],
   },
   {
-    n: 11, t: at('17:15:00'), clock: '5:15 PM', band: 'pm',
-    eyebrow: 'Chapter XI · Evening',
+    n: 10, t: at('17:15:00'), clock: '5:15 PM', band: 'pm',
+    eyebrow: 'Chapter X \u00b7 Evening',
     title: 'Back out into it',
-    place: 'Uber → Flying Books, College St',
+    place: 'Uber \u2192 Flying Books, College St',
     address: '784 College St',
     mapQ: 'Flying Books, 784 College St, Toronto',
     body: [
-      "When you're ready — and you look unreal, I already know — order an Uber to the other Flying Books, 784 College St.",
-      "Yes, there are two. Yes, I sent you to the second one on purpose. Browse for a few minutes. Someone might be waiting for you nearby.",
+      "When you're ready, and you look unreal, I already know, we'll grab an Uber together to the other Flying Books, 784 College St.",
+      "Yes, there are two locations. This is the second one, a lovely little detour before dinner. Browse the shelves with me for a few minutes.",
     ],
     photos: [{ src: 'c12.jpg', cap: "hi. it\u2019s us again." }],
   },
   {
-    n: 12, t: at('18:15:00'), clock: '6:15 PM', band: 'pm',
-    eyebrow: 'Chapter XII · Evening',
+    n: 11, t: at('18:15:00'), clock: '6:15 PM', band: 'pm',
+    eyebrow: 'Chapter XI \u00b7 Evening',
     title: 'Dinner',
     place: 'Bar Isabel',
-    address: '797 College St — right across the street',
+    address: '797 College St, right across the street',
     mapQ: 'Bar Isabel, 797 College St, Toronto',
     body: [
       "Dinner is at Bar Isabel, right across from the bookshop. Order too much, share all of it, let the night run long.",
@@ -183,29 +178,31 @@ const CHAPTERS = [
     ],
   },
   {
-    n: 13, t: at('20:00:00'), clock: '8:00 PM', band: 'pm',
-    eyebrow: 'Chapter XIII · Evening',
+    n: 12, t: at('19:45:00'), clock: '7:45 PM', band: 'pm',
+    eyebrow: 'Chapter XII \u00b7 Evening',
     title: 'Something sweet',
     place: 'Bang Bang Ice Cream',
-    address: '93A Ossington Ave — a short walk over',
+    address: '93A Ossington Ave, a short walk over',
     mapQ: 'Bang Bang Ice Cream, 93A Ossington Ave, Toronto',
     body: [
-      "Walk it off toward Ossington and get in line at Bang Bang, 93A Ossington. If the line's a monster we bail and find trouble elsewhere — no ice cream is worth an hour.",
-      "But if it's moving: get the weird flavour, share a cone with me under the lights. (They close around 8:45, so don't dawdle, gorgeous.)",
+      "Walk it off toward Ossington and get in line at Bang Bang, 93A Ossington. If the line's a monster we bail and find trouble elsewhere, no ice cream is worth an hour.",
+      "But if it's moving, get the weird flavour and share a cone with me under the lights. (They close around 8:45, so we're heading over a little early to be safe, gorgeous.)",
     ],
-    photos: [{ src: 'c15.jpg', cap: 'closer still.' }],
+    photos: [
+      { src: 'c15.jpg', cap: 'closer still.' },
+      { src: 'c16.jpg', cap: "okay now I\u2019m just showing off." },
+    ],
   },
   {
-    n: 14, t: at('21:30:00'), clock: '9:30 PM', band: 'pm',
-    eyebrow: 'Chapter XIV · Home',
+    n: 13, t: at('21:30:00'), clock: '9:30 PM', band: 'pm',
+    eyebrow: 'Chapter XIII \u00b7 Home',
     title: 'Head home for\u2026',
     body: [
       "That's the whole itinerary, my love. Eighteen months, one day built entirely around you.",
-      "Now we go home. I'll let you imagine the rest — I've been imagining it all week.",
-      "Happy anniversary, Anjali. I'm completely, ridiculously yours. — Sachin",
+      "Now we go home. I'll let you imagine the rest, I've been imagining it all week.",
+      "Happy anniversary, Anjali. I'm completely, ridiculously yours. Sachin",
     ],
     photos: [
-      { src: 'c16.jpg', cap: "okay now I\u2019m just showing off." },
       { src: 'c17_kiss.jpg', cap: "and that\u2019s the whole point." },
     ],
   },
@@ -440,15 +437,18 @@ export default function App() {
           <div className="note">
             <p>
               Eighteen months ago there was a striped shirt, a questionable
-              Super&nbsp;Bowl take, and you deciding I was worth a reply. Today the
-              whole day is yours — but you unlock it one hour at a time.
+              Super&nbsp;Bowl take, and you deciding I was worth a reply. I planned
+              this entire day for you, top to bottom, and I could not be more
+              excited about it.
             </p>
             <p>
-              Each note below is sealed until its moment arrives. No skipping ahead
-              (the locks are real — I checked). Follow them in order, trust me, and
-              I'll see you sooner than you think.
+              The first half is yours to enjoy on your own. I won't be next to you
+              for it, but make no mistake: I'm guiding every step, and I'm watching.
+              Each note below stays sealed until its moment arrives, so no skipping
+              ahead (the locks are real, I checked). Follow them in order and trust
+              me.
             </p>
-            <p className="note-sign">Happy eighteen months, Anjali. — S</p>
+            <p className="note-sign">Happy eighteen months, Anjali. Yours, S</p>
           </div>
 
           <div className="origin">
@@ -463,7 +463,7 @@ export default function App() {
 
           {beforeStart && (
             <p className="waiting">
-              The day hasn't started yet. The first note opens at 8:00 AM —{' '}
+              The day hasn't started yet. The first note opens at 8:00 AM.{' '}
               <span className="mono">{countdown(FIRST - now)}</span> to go.
             </p>
           )}
