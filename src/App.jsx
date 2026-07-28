@@ -16,7 +16,15 @@ const PREVIEW_TOKEN = 'sachin31'
 // Baking the offset in means chapters unlock at the right Toronto minute no
 // matter what time zone her phone is set to.
 const TZ = '-04:00'
-const at = (hms) => new Date(`2026-07-31T${hms}${TZ}`).getTime()
+// The day the plan runs. Change this one line back to '2026-07-31' for the real day.
+const DAY = '2026-07-28'
+const at = (hms) => new Date(`${DAY}T${hms}${TZ}`).getTime()
+
+const DAY_DT = new Date(`${DAY}T12:00:00${TZ}`)
+const dfmt = (opts) => DAY_DT.toLocaleDateString('en-US', { timeZone: 'America/Toronto', ...opts })
+const WEEKDAY = dfmt({ weekday: 'long' })     // e.g. "Tuesday"
+const MONTHDAY = dfmt({ month: 'long', day: 'numeric' }) // e.g. "July 28"
+const YEAR = dfmt({ year: 'numeric' })        // e.g. "2026"
 
 const P = '/photos/'
 
@@ -27,28 +35,38 @@ const P = '/photos/'
    ------------------------------------------------------------------------- */
 const CHAPTERS = [
   {
-    n: 1, t: at('08:15:00'), clock: '8:15 AM', band: 'am',
+    n: 1, t: at('07:45:00'), clock: '7:45 AM', band: 'am',
     eyebrow: 'Chapter I \u00b7 Morning',
     title: 'The first page',
     body: [
       "Good morning, my favourite person. Happy eighteen months.",
-      "No rushing today. The whole thing is already planned; all you have to do is follow the notes as they open. First order of business: a real breakfast, something with actual protein in it. You'll thank me by 10.",
-      "Here's the one sweet rule for today: photograph it. Every stop, every little moment, take a picture so tonight I can live the whole day back through your eyes. So do your lashes, put your face on, and start the morning already picture-ready. Glasses or contacts, either one, you are breathtaking in both.",
-      "Then pull on your workout clothes, because you're moving your body this morning. Dress for a proper sweat: leggings, a good top, the works.",
-      "This first stretch of the day is yours to enjoy solo. I'm not beside you, but I'm right here in these notes, guiding you the whole way (and watching, happily).",
+      "No rushing today. The whole thing is already planned; all you have to do is follow the notes as they open. First, a real breakfast with actual protein in it. You'll thank me by 10.",
+      "One sweet rule for today: photograph it. Every stop, every little moment, take a picture so tonight I can live the whole day back through your eyes. So do your lashes, put your face on, and start the morning already picture-ready. Glasses or contacts, either one, you are breathtaking in both.",
+      "Get dressed in your gym clothes first, that's look number one. Then pack a bag, because here's the important part: once you leave this morning, you are not coming back home until the night is over. Everything you need comes with you, in one backpack you'll carry all day.",
     ],
+    packlist: {
+      label: "Pack this. You won't be home again until tonight.",
+      items: [
+        "The gym clothes you're wearing right now",
+        "A bathing suit, for the sauna and cold plunge",
+        "A cute daytime outfit",
+        "A sexy dinner dress for the evening",
+        "An even sexier one for after dinner \ud83d\ude09",
+      ],
+    },
     photos: [{ src: 'c01.jpg', cap: 'us. exhibit A.' }],
   },
   {
     n: 2, t: at('09:15:00'), clock: '9:15 AM', band: 'am',
     eyebrow: 'Chapter II \u00b7 Morning',
-    title: 'Off you go',
+    title: 'Chapter one is sweat',
     place: 'Club S\u016bd\u014d',
     address: '16 Famous Ave, Unit 145, Woodbridge (Vaughan)',
     mapQ: 'Club Sudo, 16 Famous Ave Unit 145, Vaughan ON',
     body: [
-      "Around 9:15, order your ride to Club S\u016bd\u014d and head out for the day. Give yourself time to arrive, settle in, and get in the zone before class. Yes, this one's a gift: I set you up with a 10-day trial. Happy anniversary, athlete.",
-      "Check in under your name, Anjali Gandhi. Grab your spot, find your locker, and take a cute mirror pic for me while you're at it.",
+      "Around 9:15, get a ride to Club S\u016bd\u014d, from your dad or an Uber, and bring your backpack, since you won't be swinging back home after this. Give yourself time to arrive, settle in, and get in the zone before class.",
+      "This one's a gift: I set you up with a 10-day trial, so check in under your name, Anjali Gandhi. Your class is Steady Strength, Intermediate, at 10:30, so ask for Allexa Schabel, she knows you're coming.",
+      "Go work that booty and be a little smug about it. Snap a flushed, proud, glowing photo when you're done, I want to see exactly how strong you looked.",
     ],
     keycard: {
       label: 'Your trial, in case they need details at the desk',
@@ -56,47 +74,37 @@ const CHAPTERS = [
       email: 'spasricha@qmed.ca',
       password: 'sachinpasricha',
     },
-    photos: [{ src: 'c02.jpg', cap: 'you mid-laugh, my favourite genre.' }],
-  },
-  {
-    n: 3, t: at('10:30:00'), clock: '10:30 AM', band: 'am',
-    eyebrow: 'Chapter III \u00b7 Morning',
-    title: 'Chapter one is sweat',
-    place: 'Steady Strength \u00b7 Intermediate, Club S\u016bd\u014d',
-    body: [
-      "It's class time. Steady Strength, Intermediate, 10:30 on the dot. Ask for Allexa Schabel, she knows you're coming.",
-      "Go work that booty and be a little smug about it. Snap a flushed, proud, glowing photo when you're done, I want to see exactly how strong you looked.",
+    photos: [
+      { src: 'c02.jpg', cap: 'you mid-laugh, my favourite genre.' },
+      { src: 'c04.jpg', cap: 'proof we clean up okay.' },
     ],
-    photos: [{ src: 'c04.jpg', cap: 'proof we clean up okay.' }],
   },
   {
-    n: 4, t: at('11:30:00'), clock: '11:30 AM', band: 'am',
-    eyebrow: 'Chapter IV \u00b7 Midday',
+    n: 3, t: at('11:30:00'), clock: '11:30 AM', band: 'am',
+    eyebrow: 'Chapter III \u00b7 Midday',
     title: 'Hot, then cold',
     place: 'Contrast Therapy \u00b7 Open Flow, Club S\u016bd\u014d',
     body: [
       "Straight into contrast therapy, open flow, move at your own pace. Sauna until you're melty, cold plunge until you gasp, repeat.",
       "Keep it to about 20 to 30 minutes today though. There's plenty more day ahead of you, and your trial means you can come back and linger any time over the next 10 days.",
-      "When you're done, rinse off and freshen up. A quick one is all you need; you'll have plenty of time to get properly dressed up before dinner. Then think about me if you want to (you don't have to, but you will).",
+      "When you're done, rinse off and freshen up, then change into your cute daytime outfit. A quick one is all you need; you'll have plenty of time to get properly dressed up before dinner. Think about me if you want to (you don't have to, but you will).",
     ],
     photos: [{ src: 'c03.jpg', cap: 'cold day, warm you.' }],
   },
   {
-    n: 5, t: at('12:15:00'), clock: '12:15 PM', band: 'am',
-    eyebrow: 'Chapter V \u00b7 Midday',
+    n: 4, t: at('12:15:00'), clock: '12:15 PM', band: 'am',
+    eyebrow: 'Chapter IV \u00b7 Midday',
     title: 'Grab and go',
-    place: 'Lunch \u00b7 Clementina',
-    address: '16 Famous Ave, Unit 143, Woodbridge (same plaza)',
-    mapQ: 'Clementina, 16 Famous Ave Unit 143, Vaughan ON',
+    place: "Lunch, wherever\u2019s quickest",
     body: [
-      "This one is all yours, and it's quick. Pop into Clementina, right there in the plaza, and grab something tasty to take with you. The kind of thing you can happily eat on the subway.",
-      "You've got a train to catch soon, so keep it grab-and-go rather than a sit-down. (Anywhere in the plaza works if Clementina's slammed.) I love that I get to feed you even from here.",
+      "This one's all yours, and it's quick. You're a little pressed for time now, so grab something tasty wherever's fastest, the plaza, a spot near the station, wherever, as long as it travels well.",
+      "Keep it grab-and-go, the kind of thing you can eat on the subway. (Clementina in the plaza works if it's speedy, but don't wait around.) I love that I get to feed you even from here.",
     ],
     photos: [{ src: 'c05.jpg', cap: 'this one lives in my head rent-free.' }],
   },
   {
-    n: 6, t: at('12:45:00'), clock: '12:45 PM', band: 'am',
-    eyebrow: 'Chapter VI \u00b7 Midday',
+    n: 5, t: at('12:45:00'), clock: '12:45 PM', band: 'am',
+    eyebrow: 'Chapter V \u00b7 Midday',
     title: 'Your chariot, then the train',
     place: 'Uber \u2192 Vaughan Metropolitan Centre, then Line 1 south',
     mapQ: 'Vaughan Metropolitan Centre Station',
@@ -110,8 +118,8 @@ const CHAPTERS = [
     ],
   },
   {
-    n: 7, t: at('13:45:00'), clock: '1:45 PM', band: 'am',
-    eyebrow: 'Chapter VII \u00b7 Afternoon',
+    n: 6, t: at('13:45:00'), clock: '1:45 PM', band: 'am',
+    eyebrow: 'Chapter VI \u00b7 Afternoon',
     title: 'Read something we\u2019ll share',
     place: 'Flying Books at Neverland',
     address: '371 Queen St W (near Osgoode station)',
@@ -127,8 +135,8 @@ const CHAPTERS = [
     ],
   },
   {
-    n: 8, t: at('15:15:00'), clock: '3:15 PM', band: 'pm',
-    eyebrow: 'Chapter VIII \u00b7 Afternoon',
+    n: 7, t: at('15:15:00'), clock: '3:15 PM', band: 'pm',
+    eyebrow: 'Chapter VII \u00b7 Afternoon',
     title: 'Come to me',
     place: "\u2192 Sachin\u2019s condo (you know the way)",
     body: [
@@ -138,19 +146,19 @@ const CHAPTERS = [
     photos: [{ src: 'c10.jpg', cap: 'dressed up, still goofy.' }],
   },
   {
-    n: 9, t: at('15:45:00'), clock: '3:45 PM', band: 'pm',
-    eyebrow: 'Chapter IX \u00b7 Evening approaches',
+    n: 8, t: at('15:45:00'), clock: '3:45 PM', band: 'pm',
+    eyebrow: 'Chapter VIII \u00b7 Evening approaches',
     title: 'Get ready sexy',
     place: "Get ready at Sachin\u2019s, until 5:00",
     body: [
-      "Take your time getting ready, and I'll be right there with you while you do. Dress in a way that makes me want to end the night early \ud83d\ude09",
+      "Take your time getting ready, and I'll be right there with you while you do. Slip into that dinner dress and dress in a way that makes me want to end the night early \ud83d\ude09",
       "This is the version of tonight I've been picturing since I started planning all of this. Pour yourself something if you like, and enjoy having me all to yourself again.",
     ],
     photos: [{ src: 'c11.jpg', cap: 'eighteen months of this face.' }],
   },
   {
-    n: 10, t: at('17:15:00'), clock: '5:15 PM', band: 'pm',
-    eyebrow: 'Chapter X \u00b7 Evening',
+    n: 9, t: at('17:15:00'), clock: '5:15 PM', band: 'pm',
+    eyebrow: 'Chapter IX \u00b7 Evening',
     title: 'Back out into it',
     place: 'Uber \u2192 Flying Books, College St',
     address: '784 College St',
@@ -162,8 +170,8 @@ const CHAPTERS = [
     photos: [{ src: 'c12.jpg', cap: "hi. it\u2019s us again." }],
   },
   {
-    n: 11, t: at('18:15:00'), clock: '6:15 PM', band: 'pm',
-    eyebrow: 'Chapter XI \u00b7 Evening',
+    n: 10, t: at('18:15:00'), clock: '6:15 PM', band: 'pm',
+    eyebrow: 'Chapter X \u00b7 Evening',
     title: 'Dinner',
     place: 'Bar Isabel',
     address: '797 College St, right across the street',
@@ -178,8 +186,8 @@ const CHAPTERS = [
     ],
   },
   {
-    n: 12, t: at('19:45:00'), clock: '7:45 PM', band: 'pm',
-    eyebrow: 'Chapter XII \u00b7 Evening',
+    n: 11, t: at('19:45:00'), clock: '7:45 PM', band: 'pm',
+    eyebrow: 'Chapter XI \u00b7 Evening',
     title: 'Something sweet',
     place: 'Bang Bang Ice Cream',
     address: '93A Ossington Ave, a short walk over',
@@ -194,12 +202,12 @@ const CHAPTERS = [
     ],
   },
   {
-    n: 13, t: at('21:30:00'), clock: '9:30 PM', band: 'pm',
-    eyebrow: 'Chapter XIII \u00b7 Home',
+    n: 12, t: at('21:30:00'), clock: '9:30 PM', band: 'pm',
+    eyebrow: 'Chapter XII \u00b7 Home',
     title: 'Head home for\u2026',
     body: [
       "That's the whole itinerary, my love. Eighteen months, one day built entirely around you.",
-      "Now we go home. I'll let you imagine the rest, I've been imagining it all week.",
+      "Now we go home, together, finally. I'll let you imagine the rest, I've been imagining it all week.",
       "Happy anniversary, Anjali. I'm completely, ridiculously yours. Sachin",
     ],
     photos: [
@@ -266,7 +274,7 @@ function Gate({ onPass }) {
       <div className="gate-card">
         <div className="eyebrow">A day for the two of you</div>
         <h1 className="gate-title">Eighteen<span className="amp"> months</span></h1>
-        <p className="gate-sub">Sachin &amp; Anjali · Friday, July 31</p>
+        <p className="gate-sub">Sachin &amp; Anjali · {WEEKDAY}, {MONTHDAY}</p>
         <p className="gate-hint">There's a word only you two use. Type it.</p>
         <div className={`gate-row ${err ? 'shake' : ''}`}>
           <input
@@ -355,6 +363,15 @@ function Chapter({ c, now, preview, opened, onOpen }) {
               {c.body.map((p, k) => <p key={k}>{p}</p>)}
             </div>
 
+            {c.packlist && (
+              <div className="packlist">
+                <div className="packlist-label">{c.packlist.label}</div>
+                <ul>
+                  {c.packlist.items.map((it, k) => <li key={k}>{it}</li>)}
+                </ul>
+              </div>
+            )}
+
             {c.keycard && (
               <div className="keycard">
                 <div className="keycard-label">{c.keycard.label}</div>
@@ -422,7 +439,7 @@ export default function App() {
             Eighteen <em>months</em>
           </h1>
           <p className="hero-names">Sachin &amp; Anjali</p>
-          <p className="hero-date">Friday · July 31 · 2026</p>
+          <p className="hero-date">{WEEKDAY} · {MONTHDAY} · {YEAR}</p>
 
           <div className="clock">
             <span className="clock-time mono">{torontoClock(now)}</span>
@@ -463,7 +480,7 @@ export default function App() {
 
           {beforeStart && (
             <p className="waiting">
-              The day hasn't started yet. The first note opens at 8:00 AM.{' '}
+              The day hasn't started yet. The first note opens at {CHAPTERS[0].clock}.{' '}
               <span className="mono">{countdown(FIRST - now)}</span> to go.
             </p>
           )}
@@ -695,6 +712,14 @@ body{
 .keycard dl>div{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
 .keycard dt{color:var(--dim);font-size:.8rem}
 .keycard dd{margin:0;color:var(--cream);font-size:.86rem;text-align:right;word-break:break-all}
+
+.packlist{margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(22,15,28,.5);padding:14px 16px}
+.packlist-label{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:11px}
+.packlist ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.packlist li{position:relative;padding-left:22px;color:var(--soft);font-size:.94rem;line-height:1.4}
+.packlist li::before{content:"";position:absolute;left:3px;top:.55em;width:7px;height:7px;border-radius:2px;transform:rotate(45deg);background:linear-gradient(135deg,var(--gold),var(--gold-dim))}
+.packlist li:last-child{color:var(--rose)}
+.packlist li:last-child::before{background:linear-gradient(135deg,var(--rose),var(--rose-deep))}
 
 .gallery{margin-top:16px;display:grid;gap:12px}
 .gallery.g-2{grid-template-columns:1fr 1fr}
