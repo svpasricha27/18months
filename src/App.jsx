@@ -17,7 +17,7 @@ const PREVIEW_TOKEN = 'sachin31'
 // matter what time zone her phone is set to.
 const TZ = '-04:00'
 // The day the plan runs. Change this one line back to '2026-07-31' for the real day.
-const DAY = '2026-07-28'
+const DAY = '2026-07-31'
 const at = (hms) => new Date(`${DAY}T${hms}${TZ}`).getTime()
 
 const DAY_DT = new Date(`${DAY}T12:00:00${TZ}`)
