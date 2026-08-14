@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
 /* ============================================================================
    EASY-TO-EDIT SETTINGS  ── tweak these without touching the rest
@@ -6,6 +6,65 @@ import React, { useEffect, useMemo, useState } from 'react'
 
 // Password Anjali types to get in.
 const PASSWORD = 'sleezy'
+
+// Second password: type this instead and the site opens the "re-get-to-know-you"
+// card game rather than the anniversary schedule. Change it to whatever you like.
+const GAME_PASSWORD = 'closer'
+
+// ── SHARED PLAY (optional) ────────────────────────────────────────────────
+// Leave FIREBASE_CONFIG as null and the game runs locally on each phone
+// (two separate games). Paste a Firebase Realtime Database config object here
+// and BOTH phones share ONE live game — flip a card on one, it flips on the
+// other. Setup steps are in README.md. ROOM is just the shared game's name.
+const FIREBASE_CONFIG = null
+const ROOM = 'sachin-and-anjali'
+
+// The questions (one per card, in a deliberately mixed order). Edit freely.
+const QUESTIONS = [
+  "What is one thing you cannot live without?",
+  "How do you want us to handle money together \u2014 what's ours, what's separate, and how we spend and save?",
+  "One thing you wish you could change about me? Be gentle, but be honest.",
+  "What's one thing I do that turns you on?",
+  "In one honest sentence, where do you see us in five years?",
+  "What role do you want faith or religion to play in our life together, and in our family one day?",
+  "When do you feel most loved by me?",
+  "What's a fantasy you've been a little shy to tell me about?",
+  "What's a fear you have that you've never said out loud to me?",
+  "What tradition do you want the two of us to start?",
+  "How important is staying fit and healthy to you, and how do you want us to keep each other on track?",
+  "Which moment from our relationship do you replay the most?",
+  "What do you find sexiest about me when it's just the two of us?",
+  "One thing you wish you could change about yourself?",
+  "How do you picture us handling our families and in-laws down the road \u2014 boundaries, holidays, expectations and all?",
+  "What first made you realize you were falling for me?",
+  "What's something we've never done together that you really want to?",
+  "Describe the exact moment tonight you'd want me to kiss you.",
+  "What's a small thing I do that means more to you than I probably realize?",
+  "What's a dream you haven't told me about yet?",
+  "What's your biggest turn-on that has nothing to do with the physical?",
+  "What's the hardest part of being with me, and would you actually change it?",
+  "What's one thing from how each of our families does things that you'd want us to keep, and one to leave behind?",
+  "When was the last time I made you feel truly seen?",
+  "What's your favourite memory of the two of us being close?",
+  "What are you most proud of from our last 18 months together?",
+  "What does 'home' mean to you now, compared to 18 months ago?",
+  "What's something you've wanted to try with me but haven't asked for?",
+  "What's something you quietly need more of from me?",
+  "What's the most attractive thing about me that has nothing to do with looks?",
+  "What's one promise you want to make to me tonight?",
+  "What's a compliment you've thought about me but never actually said?",
+]
+
+// Optional dare suggestions (the partner can also invent their own).
+const DARE_IDEAS = [
+  "Kiss them somewhere you don't usually",
+  "Give a 30-second shoulder rub",
+  "Do your best impression of them",
+  "Sing one line of any song, out loud",
+  "Give a compliment you've never said before",
+  "Slow dance together for one whole song",
+  "Whisper the last thing you thought about them",
+]
 
 // Secret preview for you (Sachin): add ?preview=sachin31 to the URL and every
 // chapter unseals regardless of the clock, so you can proofread the whole day
@@ -266,7 +325,9 @@ function Gate({ onPass }) {
   const [val, setVal] = useState('')
   const [err, setErr] = useState(false)
   const submit = () => {
-    if (val.trim().toLowerCase() === PASSWORD) onPass()
+    const v = val.trim().toLowerCase()
+    if (v === PASSWORD) onPass('schedule')
+    else if (v === GAME_PASSWORD) onPass('game')
     else { setErr(true); setVal('') }
   }
   return (
@@ -401,13 +462,23 @@ function Chapter({ c, now, preview, opened, onOpen }) {
    App
    ==========================================================================*/
 export default function App() {
+  const [mode, setMode] = useState(() => store.get('anniv_mode') || '')
+  const onPass = (m) => { setMode(m); store.set('anniv_mode', m) }
+  const exit = () => { setMode(''); store.set('anniv_mode', '') }
+
+  if (mode !== 'schedule' && mode !== 'game')
+    return <><Style /><Gate onPass={onPass} /></>
+  if (mode === 'game') return <><Style /><Game onExit={exit} /></>
+  return <><Style /><Schedule onExit={exit} /></>
+}
+
+function Schedule({ onExit }) {
   const preview = useMemo(() => {
     try {
       return new URLSearchParams(window.location.search).get('preview') === PREVIEW_TOKEN
     } catch { return false }
   }, [])
 
-  const [authed, setAuthed] = useState(() => store.get('anniv_ok') === '1')
   const now = useNow(preview)
 
   const [openedSet, setOpenedSet] = useState(() => {
@@ -419,10 +490,6 @@ export default function App() {
     store.set('anniv_open', JSON.stringify([...next]))
     return next
   })
-
-  useEffect(() => { if (authed) store.set('anniv_ok', '1') }, [authed])
-
-  if (!authed) return <><Style /><Gate onPass={() => setAuthed(true)} /></>
 
   const unlockedCount = preview
     ? CHAPTERS.length
@@ -500,9 +567,176 @@ export default function App() {
           <p>made for you, on purpose, by someone who's yours.</p>
         </footer>
       </div>
+      <ExitDot onExit={onExit} />
     </>
   )
 }
+
+/* ============================================================================
+   Re-get-to-know-you game (second password)
+   ==========================================================================*/
+function ExitDot({ onExit }) {
+  return (
+    <button className="exit-dot" onClick={onExit} aria-label="Lock and go back">
+      lock
+    </button>
+  )
+}
+
+function useGameState() {
+  const INIT = { started: false, turn: 0, answered: [], active: null }
+  const [state, setLocal] = useState(() => {
+    try { const s = JSON.parse(store.get('game_state') || 'null'); if (s) return { ...INIT, ...s } } catch {}
+    return INIT
+  })
+  const remote = useRef(null)
+  const [synced, setSynced] = useState(false)
+
+  useEffect(() => {
+    if (!FIREBASE_CONFIG) return
+    let off = () => {}
+    ;(async () => {
+      try {
+        const appMod = await import(/* @vite-ignore */ 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js')
+        const dbMod = await import(/* @vite-ignore */ 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js')
+        const app = appMod.initializeApp(FIREBASE_CONFIG)
+        const db = dbMod.getDatabase(app)
+        const r = dbMod.ref(db, 'rooms/' + ROOM)
+        remote.current = { r, set: dbMod.set }
+        setSynced(true)
+        off = dbMod.onValue(r, (snap) => {
+          const v = snap.val()
+          if (v) setLocal({ ...INIT, ...v })
+        })
+      } catch (e) {
+        console.warn('Shared play unavailable, staying local:', e)
+      }
+    })()
+    return () => off()
+  }, [])
+
+  const save = (next) => {
+    setLocal(next)
+    if (remote.current) {
+      try { remote.current.set(remote.current.r, next) } catch (e) { console.warn(e) }
+    } else {
+      try { store.set('game_state', JSON.stringify(next)) } catch {}
+    }
+  }
+  return [state, save, synced]
+}
+
+function Game({ onExit }) {
+  const [state, save, synced] = useGameState()
+  const active = state.active
+
+  const players = ['Sachin', 'Anjali']
+  const current = players[state.turn]
+  const partner = players[1 - state.turn]
+  const accent = state.turn === 0 ? 'g' : 'r'
+  const answered = new Set(state.answered)
+
+  const start = (firstIdx) => save({ started: true, turn: firstIdx, answered: [], active: null })
+  const pick = (i) => { if (active) return; save({ ...state, active: { i, mode: answered.has(i) ? 'dare' : 'question' } }) }
+  const finish = () => {
+    const next = { ...state, active: null }
+    if (active.mode === 'question') next.answered = Array.from(new Set([...state.answered, active.i]))
+    next.turn = 1 - state.turn
+    save(next)
+  }
+  const newGame = () => save({ started: false, turn: 0, answered: [], active: null })
+
+  if (!state.started) {
+    return (
+      <div className="game">
+        <div className="game-intro">
+          <div className="eyebrow">Eighteen months in</div>
+          <h1 className="game-title">Let's go <em>deeper</em></h1>
+          <p className="game-lede">
+            {QUESTIONS.length} questions, all face down. Take turns picking one. Read it, then
+            answer honestly and out loud, and flip it back. It stays in play, looking
+            exactly like the rest. Draw a card that's already been answered, and your
+            partner gets to invent a dare for you.
+          </p>
+          <p className="game-ask">Who goes first?</p>
+          <div className="game-first">
+            <button className="first-btn g" onClick={() => start(0)}>Sachin</button>
+            <button className="first-btn r" onClick={() => start(1)}>Anjali</button>
+          </div>
+        </div>
+        <ExitDot onExit={onExit} />
+      </div>
+    )
+  }
+
+  return (
+    <div className={`game accent-${accent}`}>
+      <header className="game-head">
+        <h1 className="game-title sm">Let's go <em>deeper</em></h1>
+        <div className="turn">
+          <span className={`chip ${state.turn === 0 ? 'on g' : ''}`}>Sachin</span>
+          <span className="turn-vs">·</span>
+          <span className={`chip ${state.turn === 1 ? 'on r' : ''}`}>Anjali</span>
+        </div>
+        <p className="turn-line">It's <strong>{current}</strong>'s turn. Pick any card.</p>
+        <p className="game-prog">
+          <span className="mono">{state.answered.length}</span> of <span className="mono">{QUESTIONS.length}</span> opened · watch out for repeats{synced && <span className="synced-tag"> · live on both phones</span>}
+        </p>
+      </header>
+
+      <div className="grid30">
+        {QUESTIONS.map((_, i) => (
+          <button
+            key={i}
+            className={`card30 ${active && active.i === i ? 'picked' : ''}`}
+            onClick={() => pick(i)}
+            disabled={!!active}
+            aria-label="Face-down card"
+          >
+            <span className="card30-orn">✦</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="game-foot">
+        <button className="ghost-btn" onClick={newGame}>New game</button>
+      </div>
+
+      <ExitDot onExit={onExit} />
+
+      {active && (
+        <div className="overlay">
+          <div className={`reveal-card ${active.mode === 'dare' ? 'dare' : ''}`}>
+            {active.mode === 'question' ? (
+              <>
+                <div className="reveal-eyebrow">Your question</div>
+                <p className="reveal-q">{QUESTIONS[active.i]}</p>
+                <p className="reveal-instruct">
+                  {current}, take your time. Answer it out loud, and mean it.
+                </p>
+                <button className="reveal-btn" onClick={finish}>We answered it →</button>
+              </>
+            ) : (
+              <>
+                <div className="reveal-eyebrow warn">Already answered</div>
+                <p className="reveal-q">A repeat, {current}. That's a dare.</p>
+                <p className="reveal-instruct">
+                  {partner} gets to choose it. {partner}, make it a good one.
+                </p>
+                <details className="dare-ideas">
+                  <summary>need ideas?</summary>
+                  <ul>{DARE_IDEAS.map((d, k) => <li key={k}>{d}</li>)}</ul>
+                </details>
+                <button className="reveal-btn" onClick={finish}>Dare done →</button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 
 /* ============================================================================
    Styles (single injected stylesheet — self-contained, no build config needed)
@@ -740,6 +974,89 @@ body{
 .foot{max-width:640px;margin:40px auto 0;text-align:center;color:var(--dim)}
 .foot-mark{color:var(--gold-dim);display:block;font-size:1.1rem;margin-bottom:6px}
 .foot p{font-family:var(--display);font-style:italic;font-size:.95rem;margin:0}
+
+/* ---------- get-to-know-you game ---------- */
+.game{position:relative;min-height:100vh;--acc:var(--gold);--acc-dim:var(--gold-dim);
+  padding:0 20px 96px;
+  background:
+    radial-gradient(1000px 600px at 80% -10%, rgba(226,183,110,.10), transparent 60%),
+    radial-gradient(900px 640px at 8% 112%, rgba(207,116,136,.12), transparent 60%),
+    linear-gradient(180deg, var(--bg), var(--bg2));}
+.game.accent-g{--acc:var(--gold);--acc-dim:var(--gold-dim)}
+.game.accent-r{--acc:var(--rose);--acc-dim:var(--rose-deep)}
+
+.game-intro{max-width:560px;margin:0 auto;text-align:center;padding:78px 6px 40px}
+.game-title{font-family:var(--display);font-weight:500;font-size:clamp(2.6rem,10vw,4rem);line-height:1;margin:.4rem 0 .2rem}
+.game-title em{font-style:italic;color:var(--gold)}
+.game-title.sm{font-size:1.65rem;margin:0}
+.game-lede{color:var(--soft);max-width:470px;margin:1rem auto 1.5rem;font-size:1.02rem}
+.game-ask{font-family:var(--mono);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim);margin:1.2rem 0 .9rem}
+.game-first{display:flex;gap:12px;justify-content:center}
+.first-btn{padding:14px 32px;border-radius:14px;font-family:var(--display);font-size:1.35rem;cursor:pointer;color:var(--cream);
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));border:1px solid var(--line);transition:all .2s}
+.first-btn.g:hover{border-color:var(--gold);box-shadow:0 0 0 3px rgba(226,183,110,.14)}
+.first-btn.r:hover{border-color:var(--rose);box-shadow:0 0 0 3px rgba(207,116,136,.16)}
+
+.game-head{max-width:560px;margin:0 auto;text-align:center;padding:54px 6px 16px}
+.turn{display:flex;align-items:center;justify-content:center;gap:12px;margin:15px 0 8px}
+.chip{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);
+  padding:6px 15px;border-radius:999px;border:1px solid var(--line);transition:all .3s}
+.chip.on{color:#2a1c12;border-color:transparent}
+.chip.on.g{background:linear-gradient(180deg,var(--gold),var(--gold-dim))}
+.chip.on.r{background:linear-gradient(180deg,var(--rose),var(--rose-deep))}
+.turn-vs{color:var(--dim)}
+.turn-line{color:var(--soft);margin:.5rem 0 .2rem}
+.turn-line strong{color:var(--acc)}
+.game-prog{font-size:.82rem;color:var(--dim);margin:.1rem 0 0}
+.game-prog .mono{color:var(--acc)}
+.synced-tag{color:var(--acc)}
+
+.grid30{max-width:560px;margin:24px auto 0;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(min-width:520px){.grid30{grid-template-columns:repeat(5,1fr)}}
+.card30{position:relative;aspect-ratio:3/4;border-radius:12px;cursor:pointer;
+  background:linear-gradient(160deg, var(--panel2), var(--panel));
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  transition:transform .18s, border-color .18s, box-shadow .18s;overflow:hidden}
+.card30::after{content:"";position:absolute;inset:5px;border-radius:8px;border:1px solid rgba(255,255,255,.05)}
+.card30:hover:not(:disabled){transform:translateY(-3px);border-color:var(--acc);box-shadow:0 12px 26px -14px #000}
+.card30:disabled{cursor:default;opacity:.45}
+.card30.picked{opacity:1;border-color:var(--acc);box-shadow:0 0 0 3px rgba(226,183,110,.18)}
+.card30-orn{color:var(--gold-dim);opacity:.5;font-size:1.15rem}
+.card30-num{position:absolute;bottom:6px;right:8px;font-family:var(--mono);font-size:.62rem;color:var(--dim)}
+
+.game-foot{max-width:560px;margin:26px auto 0;text-align:center}
+.ghost-btn{background:none;border:1px solid var(--line);color:var(--soft);font-family:var(--mono);
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;padding:9px 17px;border-radius:10px;cursor:pointer}
+.ghost-btn:hover{border-color:var(--acc);color:var(--cream)}
+
+.overlay{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:22px;
+  background:rgba(10,6,12,.74);backdrop-filter:blur(6px);animation:fade .25s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.reveal-card{width:min(500px,94vw);text-align:center;padding:40px 28px;border-radius:22px;
+  background:linear-gradient(180deg, rgba(44,29,58,.97), rgba(30,20,38,.97));
+  border:1px solid var(--acc);box-shadow:0 44px 90px -40px #000, 0 0 0 4px rgba(226,183,110,.10);
+  animation:pop .3s cubic-bezier(.2,.8,.25,1)}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(8px)}to{opacity:1;transform:none}}
+.reveal-card.dare{border-color:var(--rose);box-shadow:0 44px 90px -40px #000, 0 0 0 4px rgba(207,116,136,.12)}
+.reveal-eyebrow{font-family:var(--mono);font-size:.66rem;letter-spacing:.28em;text-transform:uppercase;color:var(--acc);margin-bottom:15px}
+.reveal-eyebrow.warn{color:var(--rose)}
+.reveal-q{font-family:var(--display);font-weight:500;font-size:1.7rem;line-height:1.26;color:var(--cream);margin:0 0 16px}
+.reveal-instruct{color:var(--soft);font-size:.98rem;margin:0 0 22px}
+.reveal-btn{width:100%;padding:15px;border-radius:13px;border:1px solid var(--acc-dim);cursor:pointer;
+  background:linear-gradient(180deg,var(--acc),var(--acc-dim));color:#2a1c12;font-weight:700;font-size:1.02rem;font-family:var(--bodyf)}
+.reveal-card.dare .reveal-btn{background:linear-gradient(180deg,var(--rose),var(--rose-deep));border-color:var(--rose-deep)}
+.reveal-btn:hover{filter:brightness(1.06)}
+.dare-ideas{margin:0 0 20px;text-align:left}
+.dare-ideas summary{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);cursor:pointer;text-align:center;list-style:none}
+.dare-ideas summary::-webkit-details-marker{display:none}
+.dare-ideas ul{margin:13px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.dare-ideas li{position:relative;padding-left:20px;color:var(--soft);font-size:.9rem}
+.dare-ideas li::before{content:"✦";position:absolute;left:2px;color:var(--rose-deep);font-size:.68rem;top:.2em}
+
+.exit-dot{position:fixed;bottom:16px;right:16px;z-index:40;font-family:var(--mono);font-size:.58rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--dim);background:rgba(22,15,28,.72);
+  border:1px solid var(--line);border-radius:999px;padding:8px 15px;cursor:pointer;opacity:.55;transition:opacity .2s,color .2s}
+.exit-dot:hover{opacity:1;color:var(--soft)}
 
 @media (prefers-reduced-motion: reduce){
   *{animation:none!important}
