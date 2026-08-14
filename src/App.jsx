@@ -9,7 +9,7 @@ const PASSWORD = 'sleezy'
 
 // Second password: type this instead and the site opens the "re-get-to-know-you"
 // card game rather than the anniversary schedule. Change it to whatever you like.
-const GAME_PASSWORD = 'closer'
+const GAME_PASSWORD = 'deeper'
 
 // ── SHARED PLAY (optional) ────────────────────────────────────────────────
 // Leave FIREBASE_CONFIG as null and the game runs locally on each phone
@@ -318,6 +318,13 @@ const store = {
   set(k, v) { try { sessionStorage.setItem(k, v) } catch {} },
 }
 
+// Persistent store (survives closing the browser) — used for the game so a
+// device resumes the same game after reopening.
+const lstore = {
+  get(k) { try { return localStorage.getItem(k) } catch { return null } },
+  set(k, v) { try { localStorage.setItem(k, v) } catch {} },
+}
+
 /* ============================================================================
    Password gate
    ==========================================================================*/
@@ -586,7 +593,7 @@ function ExitDot({ onExit }) {
 function useGameState() {
   const INIT = { started: false, turn: 0, answered: [], active: null }
   const [state, setLocal] = useState(() => {
-    try { const s = JSON.parse(store.get('game_state') || 'null'); if (s) return { ...INIT, ...s } } catch {}
+    try { const s = JSON.parse(lstore.get('game_state') || 'null'); if (s) return { ...INIT, ...s } } catch {}
     return INIT
   })
   const remote = useRef(null)
@@ -620,7 +627,7 @@ function useGameState() {
     if (remote.current) {
       try { remote.current.set(remote.current.r, next) } catch (e) { console.warn(e) }
     } else {
-      try { store.set('game_state', JSON.stringify(next)) } catch {}
+      try { lstore.set('game_state', JSON.stringify(next)) } catch {}
     }
   }
   return [state, save, synced]
@@ -653,11 +660,16 @@ function Game({ onExit }) {
           <div className="eyebrow">Eighteen months in</div>
           <h1 className="game-title">Let's go <em>deeper</em></h1>
           <p className="game-lede">
-            {QUESTIONS.length} questions, all face down. Take turns picking one. Read it, then
-            answer honestly and out loud, and flip it back. It stays in play, looking
-            exactly like the rest. Draw a card that's already been answered, and your
-            partner gets to invent a dare for you.
+            {QUESTIONS.length} questions to help you two find each other again, eighteen
+            months in. Here's how it works:
           </p>
+          <ol className="how">
+            <li>Take turns. On your turn, tap any face-down card.</li>
+            <li>Read the question out loud and answer it honestly. Take your time.</li>
+            <li>Tap <strong>We answered it</strong> to flip the card back. It stays in play, looking exactly like all the others.</li>
+            <li>Tap a card that's already been answered? Bad luck: your partner invents a <strong>dare</strong> for you.</li>
+            <li>The site tracks whose turn it is, so just keep passing back and forth. No peeking, no skipping.</li>
+          </ol>
           <p className="game-ask">Who goes first?</p>
           <div className="game-first">
             <button className="first-btn g" onClick={() => start(0)}>Sachin</button>
@@ -990,7 +1002,13 @@ body{
 .game-title em{font-style:italic;color:var(--gold)}
 .game-title.sm{font-size:1.65rem;margin:0}
 .game-lede{color:var(--soft);max-width:470px;margin:1rem auto 1.5rem;font-size:1.02rem}
-.game-ask{font-family:var(--mono);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim);margin:1.2rem 0 .9rem}
+.game-ask{font-family:var(--mono);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-dim);margin:1.4rem 0 .9rem}
+.how{max-width:460px;margin:1.1rem auto 0;padding:0;list-style:none;counter-reset:how;text-align:left;display:flex;flex-direction:column;gap:11px}
+.how li{position:relative;padding-left:38px;color:var(--soft);font-size:.98rem;line-height:1.45;counter-increment:how}
+.how li::before{content:counter(how);position:absolute;left:0;top:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:.74rem;color:#2a1c12;border-radius:50%;
+  background:linear-gradient(180deg,var(--gold),var(--gold-dim))}
+.how li strong{color:var(--cream);font-weight:600}
 .game-first{display:flex;gap:12px;justify-content:center}
 .first-btn{padding:14px 32px;border-radius:14px;font-family:var(--display);font-size:1.35rem;cursor:pointer;color:var(--cream);
   background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));border:1px solid var(--line);transition:all .2s}
